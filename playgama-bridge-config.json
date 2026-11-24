@@ -1,0 +1,15 @@
+{
+  "advertisement": {
+    "minimumDelayBetweenInterstitial": 150,
+    "initialInterstitialDelay": 180
+  },
+  "leaderboards": [
+    { "id": "popped", "isMain": true }
+  ],
+  "saas": {
+    "publicToken": "cmvgw5tcc00ktk20hg1v2fi8y",
+    "leaderboards": {
+      "platforms": ["playgama", "playgama_sandbox", "qa_tool"]
+    }
+  }
+}
