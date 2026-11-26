@@ -141,6 +141,7 @@ button{font:inherit;color:inherit}
 .card .cn{margin-top:6px;font-family:var(--font-display);font-size:clamp(2.2rem,8vw,3.4rem);line-height:1;color:var(--bone);text-shadow:0 4px 0 var(--ink),0 0 20px rgba(255,255,255,.25)}
 .card .cs{margin-top:12px;font-weight:700;font-size:1rem;line-height:1.4;color:var(--bone-soft);text-wrap:balance}
 .card .cs b{color:var(--slime)}
+.card .cs svg{width:28px;height:18px;vertical-align:-3px}
 
 .grave-ui{justify-content:flex-end;gap:16px}
 .epi{pointer-events:none;max-width:34rem;text-align:center;font-family:var(--font-hand);font-size:clamp(1.05rem,3.6vw,1.35rem);line-height:1.35;color:var(--bone);text-shadow:0 2px 8px #000,0 0 2px #000;text-wrap:balance}
@@ -320,6 +321,19 @@ button{font:inherit;color:inherit}
 .toast{--nc:var(--n-cyan);background:rgba(16,5,34,.92);color:#fff;border:2px solid var(--tube);box-shadow:0 0 10px var(--nc)}
 .epi-candy{--nc:var(--n-pink);background:var(--glass);border:2px solid var(--tube);box-shadow:0 0 8px var(--nc)}
 #bShop.deal::after,#bShop2.deal::after{background:var(--n-cyan);border-color:#fff}
+/* 1.4.0: цель ёлки, звёзды за уровень, гость недели, адвент-календарь */
+.goal{margin:8px 0 0;padding:5px 14px;border-radius:999px;background:var(--glass);border:1.5px solid rgba(61,255,154,.5);font-weight:800;font-size:.85rem;line-height:1.3;color:#eafff2;text-shadow:0 0 6px rgba(61,255,154,.6);text-align:center;text-wrap:balance;pointer-events:none;max-width:34rem}
+.grave-ui .goal{margin:0}
+.epi-stars{display:block;margin-top:2px;font-family:var(--font-ui);font-size:1.4rem;letter-spacing:.14em;color:#ffe45a;text-shadow:0 0 8px rgba(255,228,90,.8)}
+#bGuest{--nc:var(--n-yellow)}#bAdvent{--nc:var(--n-pink)}
+#bGuest.deal,#bAdvent.deal{position:relative}
+#bGuest.deal::after,#bAdvent.deal::after{content:'';position:absolute;top:-5px;right:-5px;width:14px;height:14px;border-radius:50%;background:var(--n-cyan);border:2px solid #fff;box-shadow:0 0 10px var(--n-cyan)}
+.adv{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;max-width:27rem;margin:6px auto}
+.advd{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;aspect-ratio:1;border-radius:10px;background:rgba(30,10,60,.55);border:2px solid rgba(176,107,255,.35);font-size:.75rem;color:var(--bone-soft)}
+.advd b{font-weight:900;color:var(--bone);line-height:1}.advd canvas{width:52%;height:auto}
+.advd.got{border-color:rgba(61,255,154,.65)}.advd.today{border-color:var(--n-pink);box-shadow:0 0 12px var(--n-pink);background:rgba(255,79,216,.16)}.advd.miss{opacity:.38}
+.advs{color:var(--n-yellow);font-weight:900}
+.advhat{display:flex;align-items:center;justify-content:center;gap:10px;font-weight:800;font-size:.85rem;color:var(--bone-soft)}.advhat canvas{width:60px;height:60px}
 </style>
 </head>
 <body>
@@ -351,19 +365,21 @@ button{font:inherit;color:inherit}
   <p class="tag" id="tag"></p>
   <p class="tag2" id="tag2"></p>
   <p class="event" id="eventBanner" hidden></p>
+  <p class="goal" id="goal" hidden></p>
   <div class="title-foot">
     <div class="row"><button class="btn" id="bPlay" type="button"></button><button class="btn ghost" id="bYard" type="button"></button></div>
     <div class="best" id="best"></div>
-    <div class="title-opts"><button class="lang shopbtn" id="bShop" type="button"></button><button class="lang qbtn" id="bQuest" type="button"></button><button class="lang" id="bTop" type="button" hidden></button><button class="lang" id="bHelp" type="button" hidden></button><button class="lang bgsw" id="bBg2" type="button"></button><button class="lang" id="bLang" type="button"><span data-l="ru">Русский</span> · <span data-l="en">English</span></button></div>
+    <div class="title-opts"><button class="lang" id="bGuest" type="button" hidden></button><button class="lang" id="bAdvent" type="button" hidden></button><button class="lang shopbtn" id="bShop" type="button"></button><button class="lang qbtn" id="bQuest" type="button"></button><button class="lang" id="bTop" type="button" hidden></button><button class="lang" id="bHelp" type="button" hidden></button><button class="lang bgsw" id="bBg2" type="button"></button><button class="lang" id="bLang" type="button"><span data-l="ru">Русский</span> · <span data-l="en">English</span></button></div>
   </div>
 </section>
 
 <div class="card" id="card" hidden><div class="cl" id="cl"></div><div class="cn" id="cn"></div><div class="cs" id="cs"></div></div>
 
 <section class="screen grave-ui" id="graveUI" hidden>
+  <p class="goal" id="goal2"></p>
   <p class="epi" id="epi"></p>
   <button class="x2" id="bX2" type="button" hidden></button>
-  <div class="row" id="graveBtns"><button class="btn slime" id="bNext" type="button"></button><button class="btn ghost" id="bShop2" type="button"></button><button class="btn ghost" id="bQuest2" type="button"></button><button class="btn ghost" id="bMenu" type="button"></button></div>
+  <div class="row" id="graveBtns"><button class="btn slime" id="bNext" type="button"></button><button class="btn ghost" id="bShop2" type="button"></button><button class="btn ghost" id="bQuest2" type="button"></button><button class="btn ghost" id="bMenu" type="button"></button><button class="btn ghost" id="bShare" type="button" hidden></button><button class="btn ghost" id="bInvite" type="button" hidden></button></div>
 </section>
 
 <section class="shop" id="shop" hidden>
@@ -405,7 +421,7 @@ function mixHex(a, b, t) { const x = hexRgb(a), y = hexRgb(b); return `rgb(${Mat
    пауза и звук слушаются площадку, между уровнями показывается реклама.
    Без SDK (нет интернета, своя страница) — всё как раньше, через localStorage. */
 const PG = { b: null, dead: false, vk: false, paused: false, adOpen: false, rewOpen: false, hidden: false, audioOn: true, mem: {}, t0: performance.now(), lastAd: -1e9 };
-const STORE_KEYS = ['lang', 'snd', 'mus', 'level', 'yard', 'popped', 'bg', 'round', 'best', 'seen', 'bgm', 'candy', 'owned', 'equip', 'up', 'pop', 'daily', 'quests', 'gold'].map(k => 'vzd:' + k);
+const STORE_KEYS = ['lang', 'snd', 'mus', 'level', 'yard', 'popped', 'bg', 'round', 'best', 'seen', 'bgm', 'candy', 'owned', 'equip', 'up', 'pop', 'daily', 'quests', 'gold', 'advent', 'gifts', 'treeMs', 'social'].map(k => 'vzd:' + k);
 const store = {
   get(k, d) {
     let v = null;
@@ -463,7 +479,7 @@ function pgInit() {
   return Promise.race([go, new Promise(r => setTimeout(() => { PG.dead = !PG.b; r(false); }, 5000))]);
 }
 // связь с поддержкой — каталог ВКонтакте требует её в игре; кнопка видна только там
-const SUPPORT = { vk: 'VK_SUPPORT_URL' };
+const SUPPORT = { vk: '' };
 const pgPaused = () => PG.paused || PG.adOpen || PG.rewOpen || PG.hidden;
 function pgApplyAudio() {
   if (!A.ctx) return;
@@ -495,7 +511,7 @@ document.addEventListener('visibilitychange', () => { PG.hidden = document.hidde
    Всё идёт через один адаптер tele() → bridge.analytics.send (Bridge 2.3.0+); без SDK события никуда не уходят.
    Прохождение: progression_started / progression_completed с level_id и step_index.
    Производительность: performance_sample раз в ~30 с активной игры — без меню, ёлки, паузы, рекламы и фона. */
-const GAME_VERSION = '1.3.0';
+const GAME_VERSION = '1.4.0';
 function tele(name, data) { try { if (PG.b && PG.b.analytics && typeof PG.b.analytics.send === 'function') PG.b.analytics.send(name, data); } catch (e) {} }
 const PERF = { last: 0, ft: [], active: 0, start: 0, err: 0, rej: 0, ctx: 0 };
 addEventListener('error', () => { PERF.err++; });
@@ -536,7 +552,15 @@ const REDUCED = (() => { try { return matchMedia('(prefers-reduced-motion: reduc
 let LANG = store.get('lang', null) || pgLang();
 const TXT = {
   ru: {
-    help: 'Поддержка', name: 'Дамплинг-вечеринка', t1: 'Дамплинг-', t2: 'вечеринка', tag: 'Новогодний кликер', decor: 'Подарки, свечи, шары, снегири и иней тоже живые: потрогай их', bgName: 'Фон', play: 'Играть', cont: 'Дальше', yard: 'Ёлка',
+    help: 'Поддержка', guestTitle: 'Гость недели', guestBtn: n => `Гость недели: ${n}`,
+    treeToys: (h, t) => `Ёлка: ${h} из ${t} игрушек`, treeNext: (st, k) => `до ${['гирлянды', 'мишуры', 'подарков', 'улыбки звезды'][st]} — ${k} ${plural(k, 'взрыв', 'взрыва', 'взрывов')}`, treeFull: 'ёлка наряжена полностью',
+    treeUp: 'Ёлка стала наряднее', treeStage: ['Гирлянда!', 'Мишура и гирлянды!', 'Подарки и сияющая звезда!', 'Звезда улыбается!'], awayN: n => `под ёлкой ${n} ${plural(n, 'подарок', 'подарка', 'подарков')}`,
+    sessReady: 'Под ёлкой подарок за игру!', sessWait: tm => `Подарок за игру откроется через ${tm} — играй дальше!`, giftOpen: 'Открой!',
+    advent: 'Адвент-календарь', advBtn: 'Календарь', advSoon: 'С 1 декабря каждый день открывается окошко: конфеты и новая игрушка на ёлку.',
+    advNote: (n, need) => `Каждый день — новое окошко: конфеты и игрушка на ёлку. Открыто ${n} из 31, за ${need} — новогодний венок!`, advHat: (nm, need) => `${nm} — за ${need} окошек`,
+    advOpen: d => `Открыть окошко ${d} декабря`, advFrom: 'Откроется 1 декабря', advTomorrow: 'Следующее окошко — завтра', advOver: 'Календарь закончился', advHatLock: 'За 25 окошек календаря',
+    share: 'Похвастаться ёлкой', invite: 'Позвать друзей', soonGuest: t => `Скоро на ёлке новый гость — с ${new Date(t).getDate()} ${['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'][new Date(t).getMonth()]}. Кто это — узнаешь!`,
+    name: 'Дамплинг-вечеринка', t1: 'Дамплинг-', t2: 'вечеринка', tag: 'Новогодний кликер', decor: 'Подарки, свечи, шары, снегири и иней тоже живые: потрогай их', bgName: 'Фон', play: 'Играть', cont: 'Дальше', yard: 'Ёлка',
     lvl: 'Уровень', pressure: 'Давление', stamina: 'Силы',
     hintBox: 'Стучи по коробке — внутри кто-то шевелится…',
     hintPlay: 'Жми на дамплинг, чтобы надуть. Зажми и тяни — он тянется!',
@@ -591,7 +615,15 @@ const TXT = {
     top: 'Рекорды', topNote: 'Кто взорвал больше всех дамплингов', topLoading: 'Загружаю…', topEmpty: 'Пока здесь никого нет — будь первым!', topErr: 'Не получилось загрузить рекорды', player: 'Игрок'
   },
   en: {
-    help: 'Support', name: 'Dumpling Party', t1: 'Dumpling', t2: 'Party', tag: 'A New Year clicker', decor: 'The presents, candles, baubles, bullfinches and frost are alive too: poke them', bgName: 'Background', play: 'Play', cont: 'Continue', yard: 'Tree',
+    help: 'Support', guestTitle: 'Guest of the week', guestBtn: n => `Guest of the week: ${n}`,
+    treeToys: (h, t) => `Tree: ${h} of ${t} toys`, treeNext: (st, k) => `${k} more ${k === 1 ? 'pop' : 'pops'} to ${['the garland', 'tinsel', 'gifts', "the star's smile"][st]}`, treeFull: 'the tree is fully decorated',
+    treeUp: 'The tree got fancier', treeStage: ['A garland!', 'Tinsel and garlands!', 'Gifts and a shining star!', 'The star smiles!'], awayN: n => `${n} ${n === 1 ? 'gift' : 'gifts'} under the tree`,
+    sessReady: 'A gift for playing is under the tree!', sessWait: tm => `The gift for playing opens in ${tm}. Keep playing!`, giftOpen: 'Open!',
+    advent: 'Advent calendar', advBtn: 'Calendar', advSoon: 'From December 1, a new window opens every day: candy and a new toy for the tree.',
+    advNote: (n, need) => `A new window every day: candy and a toy for the tree. Opened ${n} of 31; ${need} give a holiday wreath!`, advHat: (nm, need) => `${nm} for ${need} windows`,
+    advOpen: d => `Open the December ${d} window`, advFrom: 'Opens on December 1', advTomorrow: 'Next window tomorrow', advOver: 'The calendar is over', advHatLock: '25 calendar windows',
+    share: 'Show off my tree', invite: 'Invite friends', soonGuest: t => `A new guest comes to the tree on ${['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][new Date(t).getMonth()]} ${new Date(t).getDate()}. Who could it be?`,
+    name: 'Dumpling Party', t1: 'Dumpling', t2: 'Party', tag: 'A New Year clicker', decor: 'The presents, candles, baubles, bullfinches and frost are alive too: poke them', bgName: 'Background', play: 'Play', cont: 'Continue', yard: 'Tree',
     lvl: 'Level', pressure: 'Pressure', stamina: 'Stamina',
     hintBox: 'Knock on the box — something is moving inside…',
     hintPlay: 'Tap the dumpling to pump it up. Hold and pull — it stretches!',
@@ -701,6 +733,18 @@ const KW_LOOK = {
 for (const s of SKINS) { Object.assign(s, { face: 'kawaii', acc: [] }, KW_LOOK[s.id]); delete s.shape; }
 // 1.2.0: лицо заставки — Пингвин в неоновых очках со жвачкой (свой облик, чтобы не путать с Пингвином уровня)
 const TITLE_HERO = { ...SKINS.find(s => s.id === 'angry'), id: 'title_penguin', cool: true };
+// 1.4.0: гость недели — отдельный герой вне пятнадцати уровней: выходит по расписанию, лопается за двойные конфеты и тоже висит на ёлке
+const GUESTS = [
+  { id: 'popper', kw: 'Хлопушка', ru: 'Хлопушка', en: 'Party Popper', mat: 'glitter', col: '#ff5fa2', hi: '#ffd0e6', lo: '#b0206a', flakes: ['#ffe45a', '#22e5ff', '#3dff9a', '#ffffff'], face: 'kawaii', acc: [], noHat: true, taps: 26, feel: 'jelly', mech: ['run'],
+    from: new Date(2026, 10, 26).getTime(), epi: { ru: 'Хлопнула громче всех на вечеринке', en: 'Popped louder than anyone at the party' } },
+  { id: 'icicle', kw: 'Сосулька', ru: 'Сосулька', en: 'Icicle', mat: 'crystal', col: '#9fdcff', hi: '#ffffff', lo: '#3a78c0', flakes: ['#ffffff', '#c9f1ff', '#9fdcff', '#e8f8ff'], face: 'kawaii', acc: [], noHat: true, taps: 30, feel: 'jelly', mech: ['tele'],
+    from: new Date(2026, 11, 3).getTime(), epi: { ru: 'Звенела на ветке до самой весны', en: 'Jingled on a branch until spring' } },
+  { id: 'flake', kw: 'Снежинка', ru: 'Снежинка', en: 'Snowflake', mat: 'glitter', col: '#eef0ff', hi: '#ffffff', lo: '#8a96d8', flakes: ['#ffffff', '#dfe6ff', '#b8c6ff', '#7fd3ff'], face: 'kawaii', acc: [], noHat: false, taps: 32, feel: 'foam', mech: ['run', 'deflate'],
+    from: new Date(2026, 11, 10).getTime(), epi: { ru: 'Ни одной такой же во всём сугробе', en: 'No other like her in the whole snowdrift' } }
+];
+const guestsOut = () => GUESTS.filter(g => Date.now() >= g.from);
+const guestNow = () => guestsOut().slice(-1)[0] || null;
+const guestNext = () => GUESTS.find(g => Date.now() < g.from) || null;
 const skinName = s => s[LANG] || s.ru;
 
 /* ================= звук (Web Audio, всё синтезируется) ================= */
@@ -1735,6 +1779,17 @@ function hatDef(id) {
     P.push({ mat: 'skin', m: { ks: 0.2, sh: 20, amb: 0.5 }, R: 20, col: '#f6ead6', shape: x => { x.beginPath(); x.roundRect(cx2 - 22, cy2 - 86, 44, 92, 8); x.fill(); x.beginPath(); x.moveTo(cx2 - 22, cy2 - 76); x.quadraticCurveTo(cx2 - 24, cy2 - 54, cx2 - 16, cy2 - 50); x.quadraticCurveTo(cx2 - 10, cy2 - 60, cx2 - 6, cy2 - 78); x.fill(); } });
     P.push({ mat: 'coal', R: 2, col: '#2a1a10', shape: x => { x.lineWidth = 3.5; x.beginPath(); x.moveTo(cx2, cy2 - 86); x.lineTo(cx2 + 2, cy2 - 100); x.stroke(); } });
     return { parts: P, flame: [18 + 2, 8 - 124] };
+  } else if (id === 'wreath') {
+    // новогодний венок: пушистое кольцо хвои, огоньки и красный бант спереди
+    const RX = 90, RY = 27, CY = HOY - 4, pt = a => [HOX + Math.cos(a) * RX, CY + Math.sin(a) * RY];
+    P.push({ mat: 'fur', R: 20, amp: 8, col: '#2a8a42', noise: [0.6, 6, 1], shape: x => { x.lineWidth = 34; x.beginPath(); x.ellipse(HOX, CY, RX, RY, 0, 0, TAU); x.stroke(); } });
+    const tufts = Array.from({ length: 16 }, (_, i) => i / 16 * TAU + 0.1).sort((p, q) => Math.sin(p) - Math.sin(q));
+    for (const a of tufts) { const [px, py] = pt(a); P.push({ mat: 'fur', R: 10, amp: 5, sb: 4, col: Math.sin(a * 3) > 0 ? '#45b862' : '#2f9a4a', noise: [0.6, 6, 1], shape: x => { x.beginPath(); x.ellipse(px, py, 24, 13, a + 0.8, 0, TAU); x.fill(); } }); }
+    [['#ff4b55', 0.5], ['#ffd23a', 1.1], ['#4fd8ff', 1.9], ['#ff7ad1', 2.6], ['#7dff9a', 3.4], ['#ffd23a', 4.2], ['#4fd8ff', 5.0], ['#ff7ad1', 5.7]].forEach(([c, a]) => { const [px, py] = pt(a); P.push({ mat: 'gloss', R: 8, col: c, sb: 3, shape: x => circ(x, px, py - 6, 9) }); });
+    const [bx, by] = pt(Math.PI / 2);
+    for (const sd of [-1, 1]) P.push({ mat: 'satin', R: 14, amp: 5, col: '#e8343e', shape: x => { x.beginPath(); x.ellipse(bx + sd * 22, by + 4, 22, 13, sd * 0.4, 0, TAU); x.fill(); } });
+    for (const sd of [-1, 1]) P.push({ mat: 'satin', R: 8, col: '#c81e2c', shape: x => { x.beginPath(); x.moveTo(bx + sd * 4, by + 8); x.lineTo(bx + sd * 18, by + 40); x.lineTo(bx + sd * 6, by + 36); x.closePath(); x.fill(); } });
+    P.push({ mat: 'satin', R: 9, col: '#f2454f', shape: x => circ(x, bx, by + 4, 11) });
   } else if (id === 'ufo') {
     const [ux, uy] = O(0, -44);
     P.push({ mat: 'gloss', m: { ks: 1.2, sh: 60, amb: 0.4 }, R: 30, col: '#a8e8ff', shape: x => { x.beginPath(); x.ellipse(ux, uy - 16, 40, 34, 0, Math.PI, TAU); x.closePath(); x.fill(); } });
@@ -2348,6 +2403,49 @@ const KW = (() => {
   }]);
   
   
+
+  // 1.4.0: гости недели
+  HEROES.push(['Хлопушка', x => {
+    const body = bodyPath(cx, by, W, H);
+    shadowUnder(x, cx, by, W);
+    ink(x, body, '#ff5fa2', { bb: BODY_BB, tint: '#d8a0c8', paint: x => {
+      x.fillStyle = 'rgba(255,214,90,.85)'; for (let i = -6; i <= 6; i++) { x.save(); x.translate(cx + i * 0.17 * W, by - 0.5 * H); x.rotate(0.55); x.fillRect(-0.028 * W, -H, 0.056 * W, 2 * H); x.restore(); }
+      const C = ['#22e5ff', '#3dff9a', '#ffffff', '#b06bff']; for (let i = 0; i < 26; i++) { x.fillStyle = C[i % 4]; x.save(); x.translate(cx - 0.55 * W + ((i * 0.618) % 1) * 1.1 * W, by - 1.0 * H + ((i * 0.37) % 1) * H); x.rotate(i); x.fillRect(-7, -3.5, 14, 7); x.restore(); }
+    } });
+    for (const [sd, col] of [[-1, '#22e5ff'], [0, '#3dff9a'], [1, '#ffe45a']]) { const pts = []; for (let i = 0; i <= 14; i++) { const t = i / 14; pts.push([cx + sd * 0.06 * W + sd * t * 0.22 * W + Math.sin(t * 9 + sd) * 12, by - 1.1 * H - t * 0.36 * H]); } tube(x, pts, 12, col, '#ffffff'); }
+    const cap = new Path2D(); cap.moveTo(cx - 0.24 * W, by - 0.97 * H); cap.quadraticCurveTo(cx, by - 1.07 * H, cx + 0.24 * W, by - 0.97 * H); cap.lineTo(cx + 0.17 * W, by - 1.15 * H); cap.quadraticCurveTo(cx, by - 1.21 * H, cx - 0.17 * W, by - 1.15 * H); cap.closePath();
+    ink(x, cap, '#ffcf3a', { bb: bbOf(cx, by - 1.08 * H, 0.48 * W, 0.24 * H), gloss: 0.7, paint: x => { x.fillStyle = '#f2a91c'; for (let i = 0; i < 7; i++) x.fillRect(cx - 0.2 * W + i * 0.065 * W, by - 1.2 * H, 0.025 * W, 0.3 * H); } });
+    eyes(x, cx, by - 0.46 * H, W * 0.19); blush(x, cx, by - 0.36 * H, W * 0.32); mouth(x, cx, by - 0.31 * H, 0.9);
+  }]);
+  HEROES.push(['Сосулька', x => {
+    for (const [dx, h] of [[-0.2, 0.3], [0, 0.4], [0.2, 0.28]]) {
+      const p = new Path2D(); p.moveTo(cx + dx * W - 24, by - 0.97 * H); p.quadraticCurveTo(cx + dx * W - 6, by - (0.97 + h * 0.6) * H, cx + dx * W, by - (0.97 + h) * H); p.quadraticCurveTo(cx + dx * W + 6, by - (0.97 + h * 0.6) * H, cx + dx * W + 24, by - 0.97 * H); p.closePath();
+      ink(x, p, '#c9f1ff', { bb: bbOf(cx + dx * W, by - (0.97 + h / 2) * H, 48, h * H), gloss: 0.9, tint: '#a9c8ec' });
+    }
+    const body = bodyPath(cx, by, W, H);
+    shadowUnder(x, cx, by, W);
+    ink(x, body, '#9fdcff', { bb: BODY_BB, tint: '#a9b8e8', paint: x => {
+      x.fillStyle = '#ffffff'; x.beginPath(); x.moveTo(cx - 0.72 * W, by - 0.74 * H);
+      for (let i = 0; i <= 8; i++) { const px = cx - 0.72 * W + i * 0.18 * W, d = i % 2 ? 0.1 + ((i * 0.37) % 1) * 0.12 : 0; x.lineTo(px, by - (0.78 - d) * H); }
+      x.lineTo(cx + 0.72 * W, by - 1.3 * H); x.lineTo(cx - 0.72 * W, by - 1.3 * H); x.closePath(); x.fill();
+      x.fillStyle = 'rgba(255,255,255,.85)'; for (let i = 0; i < 14; i++) { x.beginPath(); x.arc(cx - 0.5 * W + ((i * 0.618) % 1) * W, by - 0.58 * H + ((i * 0.41) % 1) * 0.5 * H, 3 + (i % 3), 0, TAU); x.fill(); }
+    } });
+    eyes(x, cx, by - 0.46 * H, W * 0.19); blush(x, cx, by - 0.36 * H, W * 0.32); mouth(x, cx, by - 0.31 * H, 0.9);
+  }]);
+  HEROES.push(['Снежинка', x => {
+    const body = bodyPath(cx, by, W, H);
+    shadowUnder(x, cx, by, W);
+    ink(x, body, '#eef0ff', { bb: BODY_BB, tint: TINT_W, paint: x => {
+      x.strokeStyle = 'rgba(140,160,255,.45)'; x.lineWidth = 5; x.lineCap = 'round';
+      for (const [px, py, r] of [[cx - 0.42 * W, by - 0.74 * H, 26], [cx + 0.44 * W, by - 0.62 * H, 22], [cx - 0.32 * W, by - 0.14 * H, 18], [cx + 0.32 * W, by - 0.16 * H, 20], [cx - 0.05 * W, by - 0.92 * H, 15]])
+        for (let k = 0; k < 6; k++) { const a = k * Math.PI / 3; x.beginPath(); x.moveTo(px, py); x.lineTo(px + Math.cos(a) * r, py + Math.sin(a) * r); x.stroke(); }
+    } });
+    const sx = cx + 0.24 * W, sy = by - 0.98 * H, sf = new Path2D();
+    for (let i = 0; i < 12; i++) { const a = -Math.PI / 2 + i * Math.PI / 6, r = i % 2 ? 18 : 50; const px = sx + Math.cos(a) * r, py = sy + Math.sin(a) * r; i ? sf.lineTo(px, py) : sf.moveTo(px, py); } sf.closePath();
+    ink(x, sf, '#7fd3ff', { bb: bbOf(sx, sy, 100, 100), gloss: 0.8, ow: 5, tint: '#a9c8ec', paint: x => { x.fillStyle = '#ffffff'; x.beginPath(); x.arc(sx, sy, 10, 0, TAU); x.fill(); } });
+    eyes(x, cx, by - 0.46 * H, W * 0.19); lashes(x, cx, by - 0.46 * H, W * 0.19); blush(x, cx, by - 0.36 * H, W * 0.32); smallSmile(x, cx, by - 0.31 * H, 0.9);
+  }]);
+
   function heroCanvas(i) { const c = document.createElement('canvas'); c.width = c.height = S; HEROES[i][1](c.getContext('2d')); return c; }
   
   // в игре лицо рисует drawFace (с настроениями), поэтому здесь только запоминаем его место
@@ -3125,8 +3223,8 @@ function drawFloor(x) {
   x.fillStyle = 'rgba(200,235,255,.3)'; x.fillRect(0, f, W, 1.5);
   const sh = x.createRadialGradient(W / 2, f, 10, W / 2, f, W * 0.6); sh.addColorStop(0, 'rgba(140,210,255,.12)'); sh.addColorStop(1, 'rgba(0,0,0,0)'); x.fillStyle = sh; x.fillRect(0, f, W, H - f);
 }
-function drawShadow(x, cx, w, lift) {
-  const f = SC.floor, a = clamp(0.55 - lift / 400, 0.1, 0.55), ww = w * (0.55 + 0.45 * clamp(1 - lift / 300, 0, 1));
+function drawShadow(x, cx, w, lift, floor) {
+  const f = floor ?? SC.floor, a = clamp(0.55 - lift / 400, 0.1, 0.55), ww = w * (0.55 + 0.45 * clamp(1 - lift / 300, 0, 1));
   const g = x.createRadialGradient(cx, f, 1, cx, f, ww * 0.6); g.addColorStop(0, `rgba(0,0,0,${a})`); g.addColorStop(1, 'rgba(0,0,0,0)');
   x.save(); x.translate(cx, f); x.scale(1, 0.16); x.translate(-cx, -f); x.fillStyle = g; x.beginPath(); x.arc(cx, f, ww * 0.6, 0, TAU); x.fill(); x.restore();
 }
@@ -3347,10 +3445,10 @@ function drawGhost(x, gh, t) {
    с 10 — гирлянда, с 30 — гирлянды на всех ярусах и мишура, с 60 — подарки и сияющая звезда, со 100 — звезда улыбается, вокруг искры.
    Ёлка нарисована как герои (обводка, мягкая тень, блик), вокруг неоновый ореол; неподвижная часть рисуется один раз. */
 const YARD = { data: store.get('yard', {}), fresh: null, rise: 1, slots: [], bg: null, bgA: null, tree: null, sel: null, swing: {}, snow: null, crowT: 4, stage: 0, s: 1, ox: 0, oy: 0 };
-function yardList() { return SKINS.filter(s => YARD.data[s.id]).map(s => ({ skin: s, ...YARD.data[s.id] })).sort((a, b) => a.order - b.order); }
-function yardAdd(def, taps) {
+function yardList() { return [...SKINS, ...GUESTS].filter(s => YARD.data[s.id]).map(s => ({ skin: s, ...YARD.data[s.id] })).sort((a, b) => a.order - b.order); }
+function yardAdd(def, taps, stars = 1) {
   const d = YARD.data[def.id] || { count: 0, order: Object.keys(YARD.data).length };
-  d.count++; d.n = taps; d.date = new Date().toLocaleDateString(LANG === 'ru' ? 'ru-RU' : 'en-GB');
+  d.count++; d.n = taps; d.last = stars; d.stars = Math.max(d.stars || 0, stars); d.date = new Date().toLocaleDateString(LANG === 'ru' ? 'ru-RU' : 'en-GB');
   YARD.data[def.id] = d; store.set('yard', YARD.data);
   store.set('popped', (store.get('popped', 0) || 0) + 1);
 }
@@ -3376,11 +3474,15 @@ const TREE_SLOTS = (() => {
   });
   return L.map((q, i) => [q, (i * 0.618) % 1]).sort((a, b) => a[1] - b[1]).map(a => a[0]);
 })();
+// верх подписей под ёлкой: строка цели, если она видна, иначе текст
+const yardUiEl = () => { const g = $('goal2'); return g && !g.hidden ? g : $('epi'); };
 function yardLayout() {
-  const W = SC.W, H = SC.H, ui = $('epi'), uiTop = ui && !$('graveUI').hidden ? ui.getBoundingClientRect().top : H - 190; YARD.uiTop = uiTop;
+  const W = SC.W, H = SC.H, ui = yardUiEl(), uiTop = ui && !$('graveUI').hidden ? ui.getBoundingClientRect().top : H - 190; YARD.uiTop = uiTop;
   const top = 10, bot = Math.max(top + 160, uiTop - 6), s = Math.min((bot - top) / 740, (W - 20) / 640);
   YARD.s = s; YARD.ox = W / 2 - TCX * s; YARD.oy = bot - 800 * s; YARD.stage = treeStage();
   YARD.slots = yardList().map((it, k) => { const [px, py, sz] = TREE_SLOTS[k % TREE_SLOTS.length]; return { ...it, px, py, sz }; });
+  // силуэт следующего гостя недели — «скоро на ёлке»
+  const nx = guestNext(); if (nx) { const [px, py, sz] = TREE_SLOTS[YARD.slots.length % TREE_SLOTS.length]; YARD.slots.push({ skin: nx, soon: true, count: 0, px, py, sz }); }
   yardBack();
 }
 // экранные координаты точки ёлки
@@ -3419,6 +3521,8 @@ function yardBack() {
       const [sx, sy] = treeAt(px, py + 9); YARD.bgA.dots.push({ x: sx, y: sy, c: cc, r: Math.max(8, 30 * s), ph: i * 0.9 + seed });
     }
   };
+  // игрушки адвент-календаря
+  for (const d of advInfo().open) { const q = ADV_SLOTS[d - 1]; if (q) advOrn(x, q[0], q[1], 13, d); }
   if (st >= 2) { tinsel(632, 245, 40); tinsel(468, 180, 34); }
   if (st >= 1) garland(585, 205, 40, 0);
   if (st >= 2) { garland(425, 150, 34, 2); garland(290, 95, 28, 4); }
@@ -3470,7 +3574,13 @@ function treeToy(x, it, t, k) {
     const col = gd ? '#ffe45a' : '#22e5ff', g = x.createRadialGradient(0, top + ts * 0.62, ts * 0.1, 0, top + ts * 0.62, ts * 0.55);
     g.addColorStop(0, rgba(col, 0.55)); g.addColorStop(1, rgba(col, 0)); x.save(); x.globalCompositeOperation = 'lighter'; x.fillStyle = g; x.fillRect(-ts * 0.6, top, ts * 1.2, ts * 1.2); x.restore();
   }
-  x.drawImage(skinThumb(makeSkin(it.skin), 'happy'), -ts / 2, top, ts, ts);
+  // игрушка растёт: взорван 2+ раза — серебряная рамка, 4+ — золотая, 8+ — переливается
+  if (it.count >= 2) {
+    const col = it.count >= 8 ? `hsl(${(t * 90) % 360},100%,65%)` : it.count >= 4 ? '#ffe45a' : '#dfe8ff';
+    x.save(); x.strokeStyle = col; x.lineWidth = Math.max(2, 4 * s); x.shadowColor = col; x.shadowBlur = 12; x.beginPath(); x.arc(0, top + ts * 0.62, ts * 0.42, 0, TAU); x.stroke(); x.restore();
+  }
+  x.drawImage(it.soon ? guestShadow(it.skin) : skinThumb(makeSkin(it.skin), 'happy'), -ts / 2, top, ts, ts);
+  if (it.stars) { x.save(); x.font = `900 ${Math.max(9, ts * 0.17)}px Rubik, system-ui, sans-serif`; x.textAlign = 'center'; x.lineJoin = 'round'; x.lineWidth = 3; x.strokeStyle = '#3d2216'; const st = '★'.repeat(it.stars); x.strokeText(st, 0, top + ts * 1.02); x.fillStyle = '#ffe45a'; x.fillText(st, 0, top + ts * 1.02); x.restore(); }
   if (it.count > 1) {
     const bx = ts * 0.28, by = top + ts * 0.42, br = Math.max(8, ts * 0.11);
     x.fillStyle = '#ff4fd8'; x.beginPath(); x.arc(bx, by, br, 0, TAU); x.fill(); x.strokeStyle = '#fff'; x.lineWidth = 2; x.stroke();
@@ -3479,6 +3589,36 @@ function treeToy(x, it, t, k) {
   x.restore();
   it.cx = hx + Math.sin(-a) * (top + ts * 0.62); it.cy = hy + Math.cos(a) * (top + ts * 0.62); it.r = ts * 0.34;
 }
+// силуэт следующего гостя: тёмная фигура со знаком вопроса
+const GSH = {};
+function guestShadow(def) {
+  if (GSH[def.id]) return GSH[def.id];
+  const th = skinThumb(makeSkin(def), 'happy'), c = mkCanvas(th.width, th.height), x = c.getContext('2d');
+  x.drawImage(th, 0, 0); x.globalCompositeOperation = 'source-in'; x.fillStyle = '#2a1658'; x.fillRect(0, 0, c.width, c.height);
+  x.globalCompositeOperation = 'source-over'; x.font = `900 ${c.width * 0.3}px Rubik, system-ui, sans-serif`; x.textAlign = 'center'; x.textBaseline = 'middle';
+  x.shadowColor = '#22e5ff'; x.shadowBlur = 20; x.fillStyle = '#bff8ff'; x.fillText('?', c.width / 2, c.height * 0.66);
+  return GSH[def.id] = c;
+}
+// подарки под ёлкой: слева — за игру (с отсчётом), справа — копившиеся, пока игрока не было
+function drawTreeGifts(x, t) {
+  const s = YARD.s, k = SC.DPR; YARD.hits = [];
+  {
+    const [gx, gy] = treeAt(TCX - 255, 800), w = 70 * s, ready = SESS.ready, b = ready ? Math.abs(Math.sin(t * 3.2)) * 10 * s : 0;
+    x.save(); x.globalAlpha = ready ? 1 : 0.5; x.translate(gx, gy - b);
+    if (ready) KBOX.glow(x, 0, -w * 0.45, w * 1.2, '#22e5ff', 0.5 + 0.2 * Math.sin(t * 4));
+    KBOX.body(x, w, w * 0.8, k, 'blue'); x.translate(0, -w * 0.8); KBOX.lid(x, w, w * 0.8, k, 'blue'); x.restore();
+    x.save(); x.font = `900 ${Math.max(11, 22 * s)}px Rubik, system-ui, sans-serif`; x.textAlign = 'center'; x.lineJoin = 'round'; x.lineWidth = 4; x.strokeStyle = '#12061f';
+    const lab = ready ? L().giftOpen : mmss(Math.max(0, SESS.need - SESS.t)); const ly = gy - w * 1.32 - b; x.strokeText(lab, gx, ly); x.fillStyle = ready ? '#bff8ff' : '#d8c8ff'; x.fillText(lab, gx, ly); x.restore();
+    YARD.hits.push({ kind: 'sess', x: gx, y: gy - w * 0.55, r: w * 0.8 });
+  }
+  const n = awayCount();
+  for (let i = 0; i < n; i++) {
+    const [gx, gy] = treeAt(TCX + 262 + (i % 2) * 54, 800 - (i === 2 ? 46 : 0)), w = 52 * s, b = Math.abs(Math.sin(t * 3 + i)) * 6 * s;
+    x.save(); x.translate(gx, gy - b); KBOX.glow(x, 0, -w * 0.45, w, '#ff4fd8', 0.35);
+    KBOX.body(x, w, w * 0.8, k); x.translate(0, -w * 0.8); KBOX.lid(x, w, w * 0.8, k); x.restore();
+    YARD.hits.push({ kind: 'away', x: gx, y: gy - w * 0.5, r: w * 0.75 });
+  }
+}
 function drawYard(x, t, dt) {
   const W = SC.W, H = SC.H;
   if (YARD.bg) { x.drawImage(YARD.bg, 0, 0, W, H); NEON.live(x, YARD.bgA, W, t, dt); } else { x.fillStyle = '#0d0826'; x.fillRect(0, 0, W, H); }
@@ -3486,6 +3626,7 @@ function drawYard(x, t, dt) {
   if (YARD.tree) x.drawImage(YARD.tree, 0, 0, W, H);
   treeStar(x, t);
   YARD.slots.forEach((it, k) => treeToy(x, it, t, k));
+  drawTreeGifts(x, t);
   // со 100 взрывов вокруг ёлки вспыхивают искорки
   if (YARD.stage >= 4) { x.save(); x.globalCompositeOperation = 'lighter'; x.fillStyle = '#fff6c8'; for (let i = 0; i < 22; i++) { const a = Math.pow(Math.max(0, Math.sin(t * (0.8 + (i % 5) * 0.3) + i * 2.1)), 6); if (a < 0.05) continue; const [px, py] = treeAt(90 + (i * 151) % 440, 150 + (i * 97) % 560); star4(x, px, py, (5 + (i % 3) * 3) * YARD.s * 2 * a, a); } x.restore(); }
   if (YARD.snow) drawSnowfall(x, YARD.snow, t, dt, 0.7);
@@ -3494,7 +3635,7 @@ function drawYard(x, t, dt) {
 function yardStep(dt) {
   // надпись и кнопки внизу могут поменять высоту (новая надпись, отсчёт) — тогда ёлку раскладываем заново
   YARD.chk = (YARD.chk || 0) - dt;
-  if (YARD.chk <= 0) { YARD.chk = 0.4; const top = $('epi').getBoundingClientRect().top; if (YARD.uiTop != null && Math.abs(top - YARD.uiTop) > 6) yardLayout(); }
+  if (YARD.chk <= 0) { YARD.chk = 0.4; const top = yardUiEl().getBoundingClientRect().top; if (YARD.uiTop != null && Math.abs(top - YARD.uiTop) > 6) yardLayout(); }
   if (YARD.rise < 1) {
     YARD.rise = Math.min(1, YARD.rise + dt * 0.75);
     if (YARD.rise >= 1) {
@@ -3506,11 +3647,19 @@ function yardStep(dt) {
   YARD.crowT -= dt; if (YARD.crowT < 0) { YARD.crowT = rand(7, 14); if (Math.random() < 0.6) SND.caw(); else SND.giggle(); }
 }
 function yardTap(px, py) {
+  for (const h of YARD.hits || []) {
+    if (Math.hypot(px - h.x, py - h.y) > h.r) continue;
+    if (h.kind === 'away') claimAway(h.x, h.y);
+    else if (SESS.ready) claimSess(h.x, h.y);
+    else { SND.knock(1.3); $('epi').innerHTML = L().sessWait(mmss(Math.max(0, SESS.need - SESS.t))); }
+    return true;
+  }
   for (const it of YARD.slots) {
     if (it.cx == null || Math.hypot(px - it.cx, py - it.cy) > it.r * 1.15) continue;
+    if (it.soon) { YARD.swing[it.skin.id] = { t0: SC.t, a: 0.45 }; SND.sleigh(0); $('epi').innerHTML = L().soonGuest(it.skin.from); return true; }
     YARD.sel = it.skin.id; YARD.swing[it.skin.id] = { t0: SC.t, a: 0.45 };
     SND.sleigh(0); sparkAt(it.cx, it.cy, 10);
-    $('epi').innerHTML = `${L().here} <b>${skinName(it.skin)}</b>. ${it.skin.epi[LANG]}.<small>${L().popped(it.n)} · ${it.date}</small>`;
+    $('epi').innerHTML = `${L().here} <b>${skinName(it.skin)}</b>. ${it.skin.epi[LANG]}.<small>${L().popped(it.n)} · ${it.date}</small>${it.stars ? `<span class="epi-stars">${starsTxt(it.stars)}</span>` : ''}`;
     return true;
   }
   const [sx, sy] = treeAt(TCX, 118);
@@ -3952,10 +4101,25 @@ function useSkin(def, gold) {
   DGL.setSpark(G.skin.spark); G.faceKey = ''; G.face = { ...FACE0 };
   updateFace(0, true);
 }
+// на заставке в портрете кнопки внизу закрывают героя — там он стоит чуть выше, над кнопками
+function titleFloor() {
+  SC.tfloor = SC.floor; if (SC.W >= SC.H) return;
+  const f = document.querySelector('#title .title-foot'); if (!f || $('title').hidden) return;
+  const top = f.getBoundingClientRect().top; if (top > 40) SC.tfloor = Math.min(SC.floor, Math.round(top - 8));
+}
+const heroFloor = () => G.scr === 'title' && SC.tfloor ? SC.tfloor : SC.floor;
+// герой заставки: в вертикальном экране уменьшается, чтобы не залезать на строку цели и плашку праздника
+function titleBody() {
+  titleFloor(); const sz = SC.tfloor < SC.floor ? 0.66 : 0.82; newBody(SC.W / 2, sz);
+  if (SC.W >= SC.H) return;
+  const g = [$('goal'), $('eventBanner'), $('tag2')].find(e => e && !e.hidden && e.getBoundingClientRect().height > 0); if (!g) return;
+  const room = SC.tfloor - g.getBoundingClientRect().bottom - 6, h = SC.tfloor - G.body.bounds().y0 * 1;
+  if (room > 60 && h * 1.08 > room) newBody(SC.W / 2, Math.max(0.4, sz * room / (h * 1.08)));
+}
 function newBody(x, size) {
   G.k0n = baseK(); G.k0 = G.k0n * (G.boss ? 1.3 : 1);
   G.body = new Body(G.skin, accMask(G.skin)); G.size = size; G.sizeT = size; G.sizeV = 0;
-  G.body.place(x, SC.floor, G.k0 * size);
+  G.body.place(x, heroFloor(), G.k0 * size);
 }
 function setHint(s) { const h = $('hint'); if (!s) { h.classList.remove('show'); return; } h.textContent = s; h.classList.add('show'); }
 function bubble(s, dur = 1.3) { const b = $('bubble'); b.textContent = s; b.classList.add('show'); G.bubbleT = dur; }
@@ -3968,7 +4132,7 @@ function meter() {
 }
 function hud(on) {
   $('hud').hidden = !on; if (on) $('hud').classList.remove('on-title');
-  if (G.def) { $('lvl').innerHTML = (G.boss ? `${L().boss} · ` : '') + (G.round ? `<span class="lw">${L().marathon} · </span>${L().round(G.round + 1)} · ${G.lvl + 1}/${SKINS.length}` : `<span class="lw">${L().lvl} </span>${G.lvl + 1}/${SKINS.length}`); $('nm').textContent = (G.golden ? '★ ' : '') + skinName(G.def); }
+  if (G.def) { $('lvl').innerHTML = G.guest ? L().guestTitle : (G.boss ? `${L().boss} · ` : '') + (G.round ? `<span class="lw">${L().marathon} · </span>${L().round(G.round + 1)} · ${G.lvl + 1}/${SKINS.length}` : `<span class="lw">${L().lvl} </span>${G.lvl + 1}/${SKINS.length}`); $('nm').textContent = (G.golden ? '★ ' : '') + skinName(G.def); }
 }
 
 /* --- экраны --- */
@@ -3978,29 +4142,30 @@ function toTitle() {
   document.querySelector('.hud .chip').style.visibility = 'hidden';
   FX.splats = []; FX.parts = []; FX.net = null; G.netT = 0; G.pieces = null; BOX.gone = 1;
   G.boss = false; G.split = false; G.gift = false; G.golden = false; GIFT.on = false; $('bX2').hidden = true; REW.amount = 0; MINIS.list = []; BONUS.items = []; BONUS.pk = null; showCombo(1); HELPER.has = false; candyHUD(); $('hud').classList.add('on-title');
-  useSkin(TITLE_HERO); newBody(SC.W / 2, 0.82); G.pressure = 0; G.heat = 0; GUM.t = 0; GUM.r = 0; GUM.pop = 0;
   applyLang();
+  useSkin(TITLE_HERO); titleBody(); G.pressure = 0; G.heat = 0; GUM.t = 0; GUM.r = 0; GUM.pop = 0;
   setTimeout(() => { if (G.scr === 'title') maybeDaily(); }, 700);
 }
-function startLevel(i) {
+function startLevel(i, guest) {
+  G.guest = guest || null;
   if (!navigator.userActivation || navigator.userActivation.hasBeenActive) aInit();
-  G.lvl = i; store.set('level', i); store.set('round', G.round); progStart(i, SKINS[i]);
+  G.lvl = i; store.set('level', i); store.set('round', G.round); progStart(i, guest || SKINS[i]);
   if (G.round + 1 > store.get('best', 1)) store.set('best', G.round + 1);
   $('title').hidden = true; $('graveUI').hidden = true; document.querySelector('.hud .chip').style.visibility = '';
   FX.splats = []; FX.parts = []; FX.puffs = []; FX.net = null; G.netT = 0; G.pieces = null;
   // золотой дамплинг: примерно каждый десятый, кроме самого первого уровня новичка
-  G.golden = !(G.round === 0 && i === 0) && Math.random() < 0.1; G.combo3 = false;
-  G.boss = isBossLvl(i); G.split = !G.boss && isSplitLvl(i); G.gift = isGiftLvl(i); G.giftDone = false; GIFT.on = false; G.minisDone = false; G.miniCandy = 0; G.combo = 0; G.curMul = 1; G.maxMul = 1; G.lastTap = 0; G.boxIdle = 0;
+  G.golden = !guest && !(G.round === 0 && i === 0) && Math.random() < 0.1; G.combo3 = false;
+  G.boss = !guest && isBossLvl(i); G.split = !guest && !G.boss && isSplitLvl(i); G.gift = !guest && isGiftLvl(i); G.giftDone = false; GIFT.on = false; G.minisDone = false; G.miniCandy = 0; G.combo = 0; G.curMul = 1; G.maxMul = 1; G.lastTap = 0; G.boxIdle = 0;
   MINIS.list = []; BONUS.items = []; BONUS.pk = null; showCombo(1); helperReset();
   // 1.1.1: больше трети новичков уходили, не взорвав первого дамплинга, — первый уровень короче:
   // коробка открывается с двух ударов (дальше — с пяти), первый дамплинг лопается примерно с 8 нажатий
-  G.boxNeed = G.round === 0 && i === 0 ? 2 : 5; G.tut = 0; G.callT = 0;
-  useSkin(SKINS[i], G.golden); G.mech = mechFor(G.def, G.round); if (G.boss) G.mech = G.mech.filter(m => m !== 'run' && m !== 'tele');
+  G.boxNeed = G.round === 0 && i === 0 && !guest ? 2 : 5; G.tut = 0; G.callT = 0;
+  useSkin(guest || SKINS[i], G.golden); G.mech = mechFor(G.def, G.round); if (G.boss) G.mech = G.mech.filter(m => m !== 'run' && m !== 'tele');
   G.body = null; G.taps = 0; G.pressure = 0; G.heat = 0;
-  G.need = G.boss ? Math.round(clamp(G.def.taps * 3, 55, 85) * (1 + 0.2 * G.round)) : Math.round(G.def.taps * (1 + 0.3 * G.round) * (G.round === 0 && i === 0 ? 0.67 : 1));
+  G.need = G.boss ? Math.round(clamp(G.def.taps * 3, 55, 85) * (1 + 0.2 * G.round)) : Math.round(G.def.taps * (1 + 0.3 * G.round) * (G.round === 0 && i === 0 && !guest ? 0.67 : 1));
   G.stam = 1; G.tired = false; G.runCD = 1.4; G.teleCD = 4.5; G.idleT = 0; G.alpha = 1; G.ghostT = 0; G.critT = 0;
   hud(true); $('meter').hidden = true; $('stam').hidden = true; meter();
-  const lvlTxt = G.round ? `${L().marathon} · ${L().round(G.round + 1)} · ${i + 1}/${SKINS.length}` : `${L().lvl} ${i + 1}`;
+  const lvlTxt = guest ? L().guestTitle : G.round ? `${L().marathon} · ${L().round(G.round + 1)} · ${i + 1}/${SKINS.length}` : `${L().lvl} ${i + 1}`;
   const mechTxt = G.mech.length ? G.mech.map(m => L().mech[m]).join(' ') : L().mech.none;
   if (G.golden) setTimeout(() => SND.chime(), 500);
   showCard(G.boss ? `${L().boss} · ${lvlTxt}` : lvlTxt, (G.golden ? '★ ' : '') + skinName(G.def), (G.golden ? L().goldCard + ' ' : '') + (G.boss ? `${L().bossCard} ${mechTxt}` : G.split ? `${L().splitCard} ${mechTxt}` : G.gift ? `${L().giftCard} ${mechTxt}` : mechTxt), firstLevel() ? 1100 : G.boss ? 2000 : 1600);
@@ -4059,7 +4224,7 @@ function popGum() {
 
 function tapDumpling(x, y) {
   const B = G.body; if (!B) return;
-  if (G.scr === 'title') { if (FX.net && FX.net.stuck) FX.net.life -= 0.45; B.squash(5, SC.floor); B.poke(x, y, 4); if (!popGum()) SND.squish(rand(0.9, 1.15)); setMood('ouch', 0.25); sparkAt(x, y, 8); return; }
+  if (G.scr === 'title') { if (FX.net && FX.net.stuck) FX.net.life -= 0.45; B.squash(5, heroFloor()); B.poke(x, y, 4); if (!popGum()) SND.squish(rand(0.9, 1.15)); setMood('ouch', 0.25); sparkAt(x, y, 8); return; }
   if (G.scr !== 'play') return;
   G.taps++; G.idleT = 0; tutStep('first_squeeze', 3); if (FX.net && FX.net.stuck) FX.net.life -= 0.45;
   const per = (MAX_SIZE - 1) / G.need * powerMul();
@@ -4136,18 +4301,34 @@ function boom() {
   if (META.pop) popFX(cx, cy);
   G.boomX = cx; G.boomY = cy;
 }
+// цель ёлки: сколько игрушек собрано и сколько взрывов до следующего наряда
+function treeGoal() {
+  const n = store.get('popped', 0) || 0, st = treeStage(), next = TREE_AT[st], T = L();
+  const have = yardList().length, total = SKINS.length + guestsOut().length;
+  return { have, total, txt: T.treeToys(have, total) + (next ? ' · ' + T.treeNext(st, next - n) : ' · ' + T.treeFull) };
+}
+const starsTxt = k => '★'.repeat(k) + '☆'.repeat(3 - k);
+// новый наряд ёлки — награда конфетами (за все пропущенные ступени сразу)
+const TREE_PAY = [60, 120, 200, 400];
+function treeMilestone() {
+  const st = treeStage(), had = store.get('treeMs', 0) || 0; if (st <= had) return;
+  let pay = 0; for (let k = had; k < st; k++) pay += TREE_PAY[k];
+  pay = Math.round(pay * eventMul()); store.set('treeMs', st);
+  setTimeout(() => { if (G.scr !== 'yard') return; addCandy(pay, SC.W / 2, SC.H * 0.3); showCard(L().treeUp, L().treeStage[st - 1], `${CANDY_SVG} +${pay}`, 2800); SND.bell(); }, 1700);
+  tele('tree_stage', { stage: st, candy: pay });
+}
 function toYard(fresh) {
   G.scr = 'yard'; SND.stretchStop(); setHint(''); $('title').hidden = true; $('card').hidden = true;
   hud(false); $('hud').hidden = false; $('meter').hidden = true; $('stam').hidden = true; document.querySelector('.hud .chip').style.visibility = 'hidden';
   FX.parts = []; FX.rings = []; FX.puffs = []; FX.net = null; G.netT = 0; G.pieces = null; G.body = null; YARD.sel = null;
   MINIS.list = []; showCombo(1); HELPER.has = false; candyHUD(); $('hud').classList.remove('on-title');
-  const ui = $('graveUI'); ui.hidden = false;
-  const last = G.lvl >= SKINS.length - 1;
+  const ui = $('graveUI'); ui.hidden = false; goalLabels();
+  const last = !G.guest && G.lvl >= SKINS.length - 1;
   if (fresh) {
     YARD.fresh = fresh.id; YARD.rise = 0; YARD.sel = fresh.id;
     const d = YARD.data[fresh.id];
-    $('epi').innerHTML = `${L().here} <b>${skinName(fresh)}</b>. ${fresh.epi[LANG]}.<small>${L().popped(d.n)}</small>${last ? `<span class="epi-next">${L().roundDone}</span>` : ''}<span class="epi-candy">${CANDY_SVG}+${G.reward || 0}${G.maxMul > 1 ? ` · ${L().combo} ×${G.maxMul}` : ''}</span>`;
-    yardLayout();
+    $('epi').innerHTML = `${L().here} <b>${skinName(fresh)}</b>. ${fresh.epi[LANG]}.<small>${L().popped(d.n)}</small><span class="epi-stars">${starsTxt(G.stars)}</span>${last ? `<span class="epi-next">${L().roundDone}</span>` : ''}<span class="epi-candy">${CANDY_SVG}+${G.reward || 0}${G.maxMul > 1 ? ` · ${L().combo} ×${G.maxMul}` : ''}</span>`;
+    yardLayout(); treeMilestone();
     G.autoLabel = last ? L().toMarathon(G.round + 2) : L().next; G.autoT = 6;
     $('bNext').textContent = `${G.autoLabel} (6)`; $('bNext').classList.add('pulse'); $('bNext').hidden = false;
     setTimeout(() => SND.bell(), 300); setTimeout(() => SND.organ(), 1500);
@@ -4161,7 +4342,7 @@ function toYard(fresh) {
     YARD.fresh = null; YARD.rise = 1;
     const n = yardList().length;
     $('epi').innerHTML = n ? `${L().yardHint}<small>${L().total(store.get('popped', n))}</small>` : L().yardEmpty;
-    yardLayout();
+    yardLayout(); treeMilestone();
     G.autoT = -1; $('bNext').classList.remove('pulse');
     $('bNext').textContent = L().play; $('bNext').hidden = false;
     setTimeout(() => SND.caw(), 400);
@@ -4747,7 +4928,7 @@ function openShop(tab) {
 }
 function closeShop() {
   $('shop').hidden = true; SND.click();
-  if (G.scr === 'title') { useSkin(TITLE_HERO); newBody(SC.W / 2, 0.82); }
+  if (G.scr === 'title') { useSkin(TITLE_HERO); titleBody(); }
   applyLang();
 }
 function priceHTML(p) { return `${CANDY_SVG}<span>${p}</span>`; }
@@ -4755,7 +4936,7 @@ function previewCanvas(kind, id) {
   const key = kind + ':' + id; let src = SHOP.prev[key];
   if (!src) {
     if (kind === 'hat' || kind === 'lock') {
-      const skin = makeSkin(SKINS[0]); src = mkCanvas(TS, TS); const x = src.getContext('2d');
+      const skin = makeSkin(SKINS.find(d => d.id === 'mummy') || SKINS.find(d => !NO_HAT(d)) || SKINS[0]); src = mkCanvas(TS, TS); const x = src.getContext('2d');
       x.drawImage(skin.base, 0, 0); drawFace(x, skin, { ...FACE0, mood: 'happy' });
       if (kind === 'hat') drawAccessory(x, skin, id);
       else {
@@ -4807,8 +4988,8 @@ function previewCanvas(kind, id) {
 // сколько всего можно собрать и сколько уже есть — счётчик коллекции в магазине
 function shopTotals() {
   const has = k => META.owned.has(k) ? 1 : 0;
-  const total = HATS.length + SECRET_HATS.length + 1 + POPS.length + BACKDROPS.length + UP_IDS.reduce((n, k) => n + UPS[k].length, 0);
-  const got = HATS.reduce((n, h) => n + has('hat:' + h.id), 0) + SECRET_HATS.reduce((n, h) => n + has('hat:' + h.id), 0) + has('hat:' + DAILY_HAT.id) + POPS.reduce((n, p) => n + has('pop:' + p.id), 0)
+  const total = HATS.length + SECRET_HATS.length + 2 + POPS.length + BACKDROPS.length + UP_IDS.reduce((n, k) => n + UPS[k].length, 0);
+  const got = HATS.reduce((n, h) => n + has('hat:' + h.id), 0) + SECRET_HATS.reduce((n, h) => n + has('hat:' + h.id), 0) + has('hat:' + DAILY_HAT.id) + has('hat:' + ADVENT_HAT.id) + POPS.reduce((n, p) => n + has('pop:' + p.id), 0)
     + BACKDROPS.reduce((n, b) => n + has('bg:' + b.id), 0) + UP_IDS.reduce((n, k) => n + META.up[k], 0);
   return { got, total };
 }
@@ -4827,6 +5008,7 @@ function renderShop() {
   const own = k => META.owned.has(k);
   const items = SHOP.tab === 'hats' ? [...HATS.map(h => ({ kind: 'hat', id: h.id, name: h[LANG], price: h.price, owned: own('hat:' + h.id), on: META.equip === h.id })),
       ...SECRET_HATS.map(h => ({ kind: 'hat', id: h.id, secret: true, name: own('hat:' + h.id) ? h[LANG] : T.secretName, owned: own('hat:' + h.id), on: META.equip === h.id })),
+      { kind: 'hat', id: ADVENT_HAT.id, secret: true, lock: T.advHatLock, name: own('hat:' + ADVENT_HAT.id) ? ADVENT_HAT[LANG] : T.secretName, owned: own('hat:' + ADVENT_HAT.id), on: META.equip === ADVENT_HAT.id },
       { kind: 'hat', id: DAILY_HAT.id, secret: true, lock: T.dailyHatLock, name: own('hat:' + DAILY_HAT.id) ? DAILY_HAT[LANG] : T.secretName, owned: own('hat:' + DAILY_HAT.id), on: META.equip === DAILY_HAT.id }]
     : SHOP.tab === 'pops' ? POPS.map(p => ({ kind: 'pop', id: p.id, name: p[LANG], price: p.price, owned: own('pop:' + p.id), on: META.pop === p.id }))
     : SHOP.tab === 'bgs' ? BACKDROPS.map(b => ({ kind: 'bg', id: b.id, name: b[LANG], price: BG_PRICE[b.id], owned: own('bg:' + b.id), on: BG === b.id }))
@@ -4866,7 +5048,7 @@ function buy(it) {
 function equipHat(id, silent) {
   META.equip = id; store.set('equip', id); G.faceKey = '';
   if (G.skin) updateFace(0, true);
-  if (G.scr === 'title' && G.body) newBody(SC.W / 2, 0.82);
+  if (G.scr === 'title' && G.body) titleBody();
   if (!silent) SND.click();
   renderShop();
 }
@@ -4896,13 +5078,105 @@ function eventLabel() {
 /* --- всплывающая строка «задание выполнено» --- */
 function qToast(s) { const t = $('qtoast'); t.textContent = s; t.classList.add('show'); clearTimeout(qToast.tm); qToast.tm = setTimeout(() => t.classList.remove('show'), 2400); }
 
+
+/* ================= 1.4.0: удержание — подарки под ёлкой, адвент-календарь, друзья ================= */
+// подарок за время в игре: через 2,5 минуты активной игры (потом каждые 3) под ёлкой появляется подарок
+const SESS = { t: 0, need: 150, ready: false };
+function stepSess(dt) { SESS.t += dt; if (!SESS.ready && SESS.t >= SESS.need) { SESS.ready = true; qToast(L().sessReady); } }
+function claimSess(x, y) {
+  if (!SESS.ready) return; const pay = Math.round((40 + 10 * Math.min(G.round, 5)) * eventMul());
+  SESS.t = 0; SESS.need = 180; SESS.ready = false;
+  addCandy(pay, x, y); floatText(x, y - 30, '+' + pay, '#22e5ff', 30); SND.lidPop(); goalLabels(); tele('session_gift', { candy: pay });
+}
+const mmss = sec => `${Math.floor(sec / 60)}:${String(Math.floor(sec % 60)).padStart(2, '0')}`;
+// подарки, пока игрока нет: каждые 4 часа по подарку, копится до трёх
+const AWAY_EVERY = 4 * 3600e3;
+function awayInfo() { let g = store.get('gifts', null); if (!g || !g.t) { g = { t: Date.now() }; store.set('gifts', g); } return g; }
+function awayCount() { return clamp(Math.floor((Date.now() - awayInfo().t) / AWAY_EVERY), 0, 3); }
+function claimAway(x, y) {
+  const g = awayInfo(); if (!awayCount()) return;
+  g.t = Math.max(g.t, Date.now() - 3 * AWAY_EVERY) + AWAY_EVERY; store.set('gifts', { t: g.t });
+  const pay = Math.round(30 * eventMul()); addCandy(pay, x, y); floatText(x, y - 30, '+' + pay, '#ff4fd8', 30); SND.lidPop(); goalLabels(); tele('away_gift', { candy: pay });
+}
+// подписи цели ёлки — на заставке и под ёлкой
+function goalLabels() {
+  const n = store.get('popped', 0) || 0, a = awayCount(), txt = treeGoal().txt + (a ? ' · ' + L().awayN(a) : '');
+  const g = $('goal'); if (g) { g.hidden = !n; g.textContent = txt; }
+  const g2 = $('goal2'); if (g2) { g2.hidden = !n; g2.textContent = txt; }
+}
+// адвент-календарь: с 1 по 31 декабря каждый день открывается окошко — конфеты и игрушка на ёлку; за 25 окошек — новогодний венок
+const ADV = { y: 2026, m: 11, need: 25 };
+const ADVENT_HAT = { id: 'wreath', ru: 'Новогодний венок', en: 'Holiday wreath' };
+function advInfo() {
+  const d = new Date(), inDec = d.getFullYear() === ADV.y && d.getMonth() === ADV.m, day = inDec ? d.getDate() : 0, open = store.get('advent', []) || [];
+  return { inDec, day, open, avail: inDec && !open.includes(day), before: d.getTime() < new Date(ADV.y, ADV.m, 1).getTime(), shown: d.getTime() < new Date(ADV.y + 1, 0, 9).getTime() };
+}
+const advPay = d => Math.round((20 + d * 2) * eventMul());
+function claimAdvent() {
+  const a = advInfo(); if (!a.avail) return;
+  const open = [...a.open, a.day]; store.set('advent', open);
+  const pay = advPay(a.day); addCandy(pay, SC.W / 2, SC.H * 0.5); floatText(SC.W / 2, SC.H * 0.45, '+' + pay, '#ffe45a', 34); SND.bell();
+  if (open.length >= ADV.need && !META.owned.has('hat:' + ADVENT_HAT.id)) { META.owned.add('hat:' + ADVENT_HAT.id); saveOwned(); showCard(L().advent, ADVENT_HAT[LANG], '', 2600); }
+  tele('advent_opened', { day: a.day, total: open.length, candy: pay });
+  if (G.scr === 'yard') yardBack();
+  applyLang();
+}
+// игрушка календаря: шарик или звёздочка (каждый пятый день)
+const ADV_COLS = ['#ff4b55', '#ffd23a', '#4fa8ff', '#ff7ad1', '#7dff9a', '#b06bff'];
+function advOrn(x, cx, cy, r, d) {
+  const { ink, ell, bbOf } = KW.art, col = ADV_COLS[d % ADV_COLS.length];
+  if (d % 5 === 0) {
+    const p = new Path2D(); for (let i = 0; i < 10; i++) { const a = -Math.PI / 2 + i * Math.PI / 5, rr = i % 2 ? r * 0.5 : r * 1.15; i ? p.lineTo(cx + Math.cos(a) * rr, cy + Math.sin(a) * rr) : p.moveTo(cx + Math.cos(a) * rr, cy + Math.sin(a) * rr); } p.closePath();
+    ink(x, p, '#ffd23a', { ow: 3, bb: bbOf(cx, cy, r * 2.3, r * 2.3), gloss: 0.8 });
+  } else {
+    ink(x, ell(cx, cy, r, r), col, { ow: 3, bb: bbOf(cx, cy, r * 2, r * 2), gloss: 0.9, paint: q => { q.fillStyle = 'rgba(255,255,255,.85)'; q.fillRect(cx - r, cy - r * 0.15, r * 2, r * 0.3); } });
+    ink(x, ell(cx, cy - r * 1.05, r * 0.38, r * 0.24), '#ffd23a', { ow: 2.5, bb: bbOf(cx, cy - r * 1.05, r * 0.8, r * 0.5), gloss: 0 });
+  }
+}
+function advIcon(d) { const c = mkCanvas(64, 64), x = c.getContext('2d'); x.translate(0, 4); advOrn(x, 32, 32, 18, d); return c; }
+// места игрушек календаря на ёлке (в координатах ёлки)
+const ADV_SLOTS = (() => {
+  const cells = []; [[0.4, 2], [0.65, 4], [0.9, 5]].forEach(([v, n]) => { for (let p = 0; p < n; p++) cells.push([v, (p + 0.5) / n]); });
+  const perm = [5, 1, 8, 3, 10, 0, 6, 2, 9, 4, 7];   // первые дни разбросаны по всей ёлке
+  return Array.from({ length: 31 }, (_, i) => { const [top, bot, hw] = TIERS[i % 3], [v0, u0] = cells[perm[Math.floor(i / 3)]], v = v0 + Math.sin(i * 12.99) * 0.035, u = u0 + Math.cos(i * 78.23) * 0.05; return [TCX + (u * 2 - 1) * hw * v * 0.82, top + (bot - top) * v]; });
+})();
+function renderAdvent(body) {
+  const T = L(), a = advInfo(); $('panelT').textContent = T.advent;
+  body.append(elx('p', 'shop-note', a.before ? T.advSoon : T.advNote(a.open.length, ADV.need)));
+  const grid = elx('div', 'adv');
+  for (let d = 1; d <= 31; d++) {
+    const opened = a.open.includes(d), today = a.inDec && d === a.day, past = a.inDec ? d < a.day : !a.before;
+    const c = elx('div', 'advd' + (opened ? ' got' : today ? ' today' : past ? ' miss' : ''));
+    c.append(elx('b', '', String(d)));
+    if (opened) c.append(advIcon(d)); else c.append(elx('span', 'advs', today ? '★' : ''));
+    grid.append(c);
+  }
+  body.append(grid);
+  const hat = elx('div', 'advhat'); hat.append(previewCanvas('hat', ADVENT_HAT.id), elx('span', '', T.advHat(ADVENT_HAT[LANG], ADV.need))); body.append(hat);
+  const b = elx('button', 'ibtn big'); b.type = 'button';
+  if (a.avail) { b.textContent = T.advOpen(a.day); b.addEventListener('click', e => { e.stopPropagation(); aInit(); claimAdvent(); renderPanel(); }); }
+  else { b.textContent = a.before ? T.advFrom : a.inDec ? T.advTomorrow : T.advOver; b.disabled = true; }
+  body.append(b);
+}
+// «Похвастаться ёлкой» и «Позвать друзей» — только там, где площадка это умеет (ВКонтакте и др.); раз в день за это конфеты
+function socialOk(flag) { try { return !!(PG.b && PG.b.social && PG.b.social[flag]); } catch (e) { return false; } }
+function socialDo(kind) {
+  const b = PG.b; if (!b) return; SND.click(); stopAuto();
+  let p; try { p = kind === 'share' ? b.social.share('tree') : b.social.inviteFriends('friends'); } catch (e) { return; }
+  Promise.resolve(p).then(() => {
+    const S = store.get('social', {}) || {};
+    if (S[kind] !== dayKey()) { S[kind] = dayKey(); store.set('social', S); const pay = Math.round(30 * eventMul()); addCandy(pay, SC.W / 2, SC.H * 0.5); floatText(SC.W / 2, SC.H * 0.45, '+' + pay, '#ffe45a', 30); }
+    tele(kind === 'share' ? 'social_share' : 'social_invite', {});
+  }).catch(() => {});
+}
+
 /* --- окно для подарка дня, заданий и рекордов --- */
 const PANEL = { kind: '' };
 function openPanel(kind) { stopAuto(); PANEL.kind = kind; $('panel').hidden = false; renderPanel(); SND.click(); }
-function closePanel() { if (PANEL.kind === 'daily') claimDaily(); $('panel').hidden = true; PANEL.kind = ''; SND.click(); }
+function closePanel() { const was = PANEL.kind; if (was === 'daily') claimDaily(); $('panel').hidden = true; PANEL.kind = ''; SND.click(); if (was === 'daily') setTimeout(maybeDaily, 700); }
 function renderPanel() {
   const body = $('panelBody'); body.innerHTML = ''; $('bPanelX').setAttribute('aria-label', L().close);
-  if (PANEL.kind === 'daily') renderDaily(body); else if (PANEL.kind === 'quests') renderQuests(body); else if (PANEL.kind === 'top') renderTop(body);
+  if (PANEL.kind === 'daily') renderDaily(body); else if (PANEL.kind === 'quests') renderQuests(body); else if (PANEL.kind === 'top') renderTop(body); else if (PANEL.kind === 'advent') renderAdvent(body);
 }
 
 /* --- подарок дня: растёт, если заходить подряд; на 7-й день — корона Снежной королевы --- */
@@ -4913,7 +5187,10 @@ function dailyInfo() {
   const day = avail ? (d.last === dayKey(Date.now() - 86400000) ? (d.streak || 0) % 7 + 1 : 1) : d.streak || 1;
   return { avail, day };
 }
-function maybeDaily() { if (dailyInfo().avail && $('panel').hidden && $('shop').hidden && (G.scr === 'title' || G.scr === 'yard')) openPanel('daily'); }
+function maybeDaily() {
+  if (!$('panel').hidden || !$('shop').hidden || !(G.scr === 'title' || G.scr === 'yard')) return;
+  if (dailyInfo().avail) openPanel('daily'); else if (advInfo().avail) openPanel('advent');
+}
 function claimDaily() {
   const inf = dailyInfo(); if (!inf.avail) return;
   store.set('daily', { last: dayKey(), streak: inf.day });
@@ -5131,6 +5408,7 @@ function stepBats(dt) {
 let ACC = 0;
 function update(dt) {
   SC.t += dt; stepBats(dt); if (G.scr !== 'yard') stepDecor(dt);
+  if (/^(box|emerge|play|crit|boom|minis|gift|bonus|bonusEnd)$/.test(G.scr) && !pgPaused()) stepSess(dt);
   SC.dim += (1 - SC.dim) * Math.min(1, dt * 4);
   if (G.bubbleT > 0) { G.bubbleT -= dt; if (G.bubbleT <= 0 || (!G.body && G.scr !== 'box')) $('bubble').classList.remove('show'); }
   stepCandyFly(dt); stepCombo();
@@ -5168,7 +5446,7 @@ function update(dt) {
     ACC += dt; let steps = 0;
     while (G.body && ACC >= 1 / 60 && steps < 3) {
       G.body.k = G.k0 * Math.max(0.3, G.size);
-      G.body.step(1 / 60, { floor: SC.floor, W: SC.W, upright: 0.96, stiff: G.scr === 'crit' ? 1.8 : 1 }); ACC -= 1 / 60; steps++;
+      G.body.step(1 / 60, { floor: heroFloor(), W: SC.W, upright: 0.96, stiff: G.scr === 'crit' ? 1.8 : 1 }); ACC -= 1 / 60; steps++;
     }
     if (steps === 3) ACC = 0;
     if (G.body) {
@@ -5187,14 +5465,17 @@ function update(dt) {
     else if (G.boomT > 1.0 && !FX.ghost && (!(G.boss || G.split) || G.minisDone) && (!G.gift || G.giftDone)) { FX.ghost = { x: G.boomX, y: Math.min(G.boomY, SC.floor - 120), vy: 70, s: Math.min(1.2, SC.W / 600), a: 0, age: 0, life: 2.6, ph: 0, col: G.def.col, skin: G.skin }; SND.ghost(); }
     if (FX.ghost) { const g = FX.ghost; g.age += dt; g.y -= g.vy * dt; g.a = Math.min(1, g.age * 2) * clamp((g.life - g.age) / 0.8, 0, 1); }
     if (G.boomT > 3.6) {
-      FX.ghost = null; yardAdd(G.def, G.taps);
-      // конфеты за уровень: база растёт с уровнем и кругом, умножается на лучшее комбо, +50% за быстрый взрыв
+      // 1.4.0: звёзды за скорость — три быстрее 12 с (как раньше «быстрый взрыв», ×1,5), две быстрее 25 с (×1,2), иначе одна
       const dur = (performance.now() - (G.playStart || performance.now())) / 1000;
-      G.reward = Math.round((6 + G.lvl * 2 + (G.boss ? 20 : 0)) * (1 + 0.5 * G.round) * G.maxMul * (dur < 12 ? 1.5 : 1) * (G.golden ? 3 : 1) * earnMul());
+      G.stars = dur < 12 ? 3 : dur < 25 ? 2 : 1;
+      FX.ghost = null; yardAdd(G.def, G.taps, G.stars);
+      // конфеты за уровень: база растёт с уровнем и кругом, умножается на лучшее комбо и звёзды; гость недели — вдвое
+      G.reward = Math.round((6 + G.lvl * 2 + (G.boss ? 20 : 0)) * (1 + 0.5 * G.round) * G.maxMul * [1, 1, 1.2, 1.5][G.stars] * (G.golden ? 3 : 1) * (G.guest ? 2 : 1) * earnMul());
       G.goldNew = false; if (G.golden) { if (!META.gold.has(G.def.id)) { META.gold.add(G.def.id); store.set('gold', [...META.gold]); G.goldNew = true; } tele('golden_popped', { level_id: G.def.id }); }
       questAdd('pop'); if (G.boss) questAdd('boss'); if (dur < 12) questAdd('fast'); pgScore();
-      const wrap = G.lvl + 1 >= SKINS.length;
-      G.next = wrap ? 0 : G.lvl + 1; G.nextRound = wrap ? G.round + 1 : G.round; store.set('level', G.next); store.set('round', G.nextRound);
+      const wrap = !G.guest && G.lvl + 1 >= SKINS.length;
+      G.next = G.guest ? G.lvl : wrap ? 0 : G.lvl + 1; G.nextRound = wrap ? G.round + 1 : G.round; store.set('level', G.next); store.set('round', G.nextRound);
+      if (G.guest) tele('guest_popped', { level_id: G.def.id, stars: G.stars });
       toYard(G.def);
     }
   }
@@ -5222,12 +5503,12 @@ function render(dt) {
   for (const p of DECOR.pumpkins) giftDecor(u, p, SC.floor + 4, SC.t);
   for (const c of DECOR.candles) candle(u, c, SC.floor + 2, SC.t);
   const B = G.body;
-  if (B) { const bb = B.bounds(); heroGlow(u, bb); drawShadow(u, (bb.x0 + bb.x1) / 2, bb.x1 - bb.x0, SC.floor - bb.y1); }
+  if (B) { const bb = B.bounds(), hf = heroFloor(); heroGlow(u, bb); drawShadow(u, (bb.x0 + bb.x1) / 2, bb.x1 - bb.x0, hf - bb.y1, hf); }
   if (G.scr === 'box' || G.scr === 'emerge') { drawShadow(u, BOX.x, BOX.w * 1.2 * (1 - BOX.gone), BOX.drop * H); boxBack(u); }
   DGL.clear();
   const clr = G.def && G.def.feel === 'jelly' ? 1 : 0.3;
   if (B) {
-    if (DGL.ok) { const n = B.fill(); DGL.draw(B.pos, B.uv, B.sta, n, { floor: SC.floor, t: SC.t, alpha: G.alpha, heat: G.heat, spark: 1, reflect: bdDef().reflect, clear: clr }); }
+    if (DGL.ok) { const n = B.fill(); DGL.draw(B.pos, B.uv, B.sta, n, { floor: heroFloor(), t: SC.t, alpha: G.alpha, heat: G.heat, spark: 1, reflect: bdDef().reflect, clear: clr }); }
     else { const bb = B.bounds(); u.globalAlpha = G.alpha; u.drawImage(G.skin.tex, 30, 60, 452, 420, bb.x0, bb.y0, bb.x1 - bb.x0, bb.y1 - bb.y0); u.globalAlpha = 1; }
   }
   if (G.scr === 'minis') drawMinis(u);
@@ -5266,7 +5547,7 @@ function bindInput() {
     const pad = (has('run') || has('tele')) && G.scr === 'play' ? 34 : 10;
     if (can && B.hit(x, y, pad)) {
       G.ptr.id = e.pointerId; try { st.setPointerCapture(e.pointerId); } catch (er) {}
-      G.ptr.sx = x; G.ptr.sy = y; G.ptr.stretched = false; G.ptr.grabbed = B.grab(x, y, SC.floor); st.classList.add('grab');
+      G.ptr.sx = x; G.ptr.sy = y; G.ptr.stretched = false; G.ptr.grabbed = B.grab(x, y, heroFloor()); st.classList.add('grab');
       tapDumpling(x, y);
     } else if (!decorTap(x, y)) missTap(x, y);
   });
@@ -5309,12 +5590,14 @@ function bindInput() {
   // к каждому новому уровню после взрыва — следующий фон
   const leaveYard = () => { G.autoT = -1; $('bX2').hidden = true; REW.amount = 0; $('bNext').classList.remove('pulse'); if (YARD.fresh) { G.lvl = G.next; G.round = G.nextRound ?? G.round; } };
   // после 3-го, 6-го и 9-го уровня — бонус-раунд
-  btn('bNext', () => { SND.click(); const fresh = !!YARD.fresh, done = G.lvl; leaveYard(); if (fresh) { nextBackdrop(false); pgAd(); } if (fresh && isBonusAfter(done)) startBonus(() => startLevel(G.lvl)); else startLevel(G.lvl); });
+  btn('bNext', () => { SND.click(); const fresh = !!YARD.fresh, done = G.lvl, wasGuest = !!G.guest; leaveYard(); if (fresh) { nextBackdrop(false); pgAd(); } if (fresh && !wasGuest && isBonusAfter(done)) startBonus(() => startLevel(G.lvl)); else startLevel(G.lvl); });
   btn('bMenu', () => { SND.click(); leaveYard(); YARD.fresh = null; toTitle(); });
   btn('bHome', () => { SND.click(); leaveYard(); YARD.fresh = null; toTitle(); });
   // фон: если куплен только один, ведём в магазин (в игре — подсказка, чтобы не прерывать уровень)
   const bgBtn = () => { if (ownedBgs().length > 1) { SND.click(); nextBackdrop(); return; } if (G.scr === 'title' || G.scr === 'yard') openShop('bgs'); else { setHint(L().bgShopHint); clearTimeout(bgBtn.tm); bgBtn.tm = setTimeout(() => setHint(''), 2200); } };
   btn('bBg', bgBtn); btn('bBg2', bgBtn);
+  btn('bGuest', () => { const g = guestNow(); if (g) { SND.click(); startLevel(G.lvl, g); } }); btn('bAdvent', () => openPanel('advent'));
+  btn('bShare', () => socialDo('share')); btn('bInvite', () => socialDo('invite'));
   btn('bShop', () => openShop('hats')); btn('bShop2', () => openShop('hats')); btn('bShopX', closeShop);
   document.querySelectorAll('#shop .tab').forEach(b => b.addEventListener('click', e => { e.stopPropagation(); SHOP.tab = b.dataset.tab; SND.click(); renderShop(); }));
   $('shop').addEventListener('click', e => { if (e.target === $('shop')) closeShop(); });
@@ -5338,6 +5621,10 @@ function applyLang() {
   $('bShop').innerHTML = `${CANDY_SVG}<b>${META.candy}</b>&nbsp;·&nbsp;${T.shop}`; $('bShop2').textContent = T.shop; candyHUD(); if (!$('shop').hidden) renderShop();
   if (G.def) $('nm').textContent = (G.golden ? '★ ' : '') + skinName(G.def);
   questLabels(); eventLabel(); $('bQuest2').textContent = $('bQuest').textContent; $('bTop').textContent = T.top; $('bTop').hidden = lbType() !== 'in_game'; $('bHelp').textContent = T.help; $('bHelp').hidden = !(PG.vk && SUPPORT.vk);
+  const gst = guestNow(); $('bGuest').hidden = !gst || !any; if (gst) { $('bGuest').textContent = T.guestBtn(skinName(gst)); $('bGuest').classList.toggle('deal', !YARD.data[gst.id]); }
+  const adv = advInfo(); $('bAdvent').hidden = !adv.shown || !any; $('bAdvent').textContent = T.advBtn; $('bAdvent').classList.toggle('deal', adv.avail);
+  $('bShare').textContent = T.share; $('bShare').hidden = !socialOk('isShareSupported'); $('bInvite').textContent = T.invite; $('bInvite').hidden = !socialOk('isInviteFriendsSupported');
+  goalLabels();
   if (REW.amount && !$('bX2').hidden) $('bX2').innerHTML = `${CANDY_SVG}${T.x2(REW.amount)}`;
   if (!$('panel').hidden) renderPanel();
   iceLogoSoon();
@@ -5354,6 +5641,7 @@ function resize() {
   DGL.resize(SC.W, SC.H, SC.DPR);
   sceneLayout(); yardLayout(); backdropLayout(); BOX.x = SC.W / 2;
   if (G.body) { G.k0 = baseK(); const [cx] = G.body.centroid(); if (cx > SC.W - 20 || cx < 20) G.body.moveBy(SC.W / 2 - cx, 0); }
+  if (G.scr === 'title') { if (G.body) titleBody(); else titleFloor(); }
 }
 // ёлка после взрыва: через 6 секунд игра сама переходит к следующему дамплингу (с рекламой, как по кнопке);
 // если игрок трогает ёлку — отсчёт останавливается

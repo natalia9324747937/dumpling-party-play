@@ -4,12 +4,39 @@
     "initialInterstitialDelay": 180
   },
   "leaderboards": [
-    { "id": "popped", "isMain": true }
+    {
+      "id": "popped",
+      "isMain": true
+    }
   ],
   "saas": {
     "publicToken": "cmvgw5tcc00ktk20hg1v2fi8y",
     "leaderboards": {
-      "platforms": ["playgama", "playgama_sandbox", "qa_tool"]
+      "platforms": [
+        "playgama",
+        "playgama_sandbox",
+        "qa_tool"
+      ]
     }
+  },
+  "social": {
+    "shares": [
+      {
+        "id": "tree",
+        "text": "Look at my Christmas tree in Dumpling Party! Pop the dumplings and dress up yours.",
+        "vk": {
+          "text": "Смотри, какая у меня ёлка в «Дамплинг-вечеринке»! Взрывай дамплинги и наряжай свою."
+        }
+      }
+    ],
+    "invites": [
+      {
+        "id": "friends",
+        "text": "Come pop dumplings with me in Dumpling Party!",
+        "vk": {
+          "text": "Заходи взрывать дамплинги и наряжать ёлку в «Дамплинг-вечеринке»!"
+        }
+      }
+    ]
   }
 }
